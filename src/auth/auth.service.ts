@@ -22,11 +22,22 @@ export class AuthService {
     return newUser;
   }
 
-  //   async login(user: UserDocument): Promise<UserDocument | string> {
-  //     const myUser = await this.userModel.find({ username: user.username });
-  //     if (!myUser) {
-  //       return 'User not found';
-  //     }
-  //     // if
-  //   }
+  async login(user: CreateUserDto): Promise<User | string> {
+    try {
+      const myUser = await this.userModel.findOne({
+        username: user.username,
+      });
+      if (!myUser) {
+        return 'Invalid credentials';
+      }
+      const isValid = await bcrypt.compare(user.password, myUser.password);
+      if (!isValid) {
+        return 'invalid credentials';
+      }
+      myUser.password = undefined;
+      return myUser;
+    } catch (error) {
+      return 'something went wrong';
+    }
+  }
 }

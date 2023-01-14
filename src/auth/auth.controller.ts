@@ -10,4 +10,8 @@ export class AuthController {
   register(@Body() createUserDto: CreateUserDto): Promise<User> {
     return this.authService.register(createUserDto);
   }
+  @Post('/login')
+  login(@Body() user: CreateUserDto): Promise<User | string> {
+    return this.authService.login(user);
+  }
 }
